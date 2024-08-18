@@ -5,7 +5,7 @@
         <strong>Project Requirements</strong>
     </summary>
 
-Your time has been assigned to create a full-stack web application for a Hotel. The customer request the following features:
+**Your time has been assigned to create a full-stack web application for a Hotel. The customer request the following features:**
 
 - Hotel Customers can search, view and book a room for their desired date.
 
@@ -67,7 +67,7 @@ Database being used is `MySql`.
 - Default user is `root`.
 - Default passwod is `root123`
 
-Use any **_SGBD/DBMS\*_** to access it.
+Use any **_SGBD/DBMS\*_** to access it.</br>
 \*Database Management System.
 
 </details>
