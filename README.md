@@ -5,7 +5,7 @@
         <strong>Project Requirements</strong>
     </summary>
 
-- Your time has been assigned to create a full-stack web application for a Hotel. The customer request the following features:
+Your time has been assigned to create a full-stack web application for a Hotel. The customer request the following features:
 
 - Hotel Customers can search, view and book a room for their desired date.
 
