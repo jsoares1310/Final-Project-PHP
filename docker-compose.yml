@@ -1,0 +1,25 @@
+services:
+  db:
+    container_name: Mysql_Database
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+
+  php:
+    container_name: php-apache
+    image: php:8.2-apache
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
