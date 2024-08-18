@@ -46,6 +46,20 @@
 
 Run the command: `docker compose up -d`
 
+- This command will build the containers.
+
+If you want to stop the containers:
+
+- Run the command: `docker compose stop`
+
+If you want to start the containers:
+
+- Run the command: `docker compose start`
+
+To remove the containers:
+
+- Run the command: `docker compose down`
+
 Wait for the response:
 
 - Should be like this:
