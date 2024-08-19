@@ -16,6 +16,11 @@ services:
     container_name: php-apache
     image: php:8.2-apache
     restart: always
+    command: >
+      bash -c "
+      docker-php-ext-install mysqli &&
+      apache2-foreground
+      "
     ports:
       - 8080:80
     volumes:
