@@ -1,5 +1,6 @@
 <?php 
 require('./Classes/LogClass.php');
+require('./Database/Config.php');
 
 class Database {
     // server name ex: localhost
@@ -11,20 +12,20 @@ class Database {
     // Database name
     private string $dbName;
     // mysqli variable for connection to database
-    private mysqli $connection;
+    protected mysqli $connection;
 
     //Log class
     private Log $logger;
 
-    public function __construct(string $userName, string $pwd, string $dbName)
+    public function __construct()
     {
         // Here the server name is the same name as the db service
         // defined in the docker-compose.yml
         // it needs to be that way because the code is running inside docker network
-        $this -> serverName = "db";
-        $this -> userName = $userName;
-        $this -> pwd = $pwd;
-        $this -> dbName = $dbName;
+        $this -> serverName = SERVER_NAME;
+        $this -> userName = USER;
+        $this -> pwd = PWD;
+        $this -> dbName = DATABASE;
         $this -> logger = new Log();
 
         // connect to database as soon as the class is created.
@@ -39,7 +40,7 @@ class Database {
             $this -> userName,
             $this -> pwd,
             $this -> dbName,
-            3306 
+            PORT
         );
 
         if ($this->connection->connect_error) {
@@ -53,35 +54,11 @@ class Database {
        }
     }
 
-    public function getAll(string $table, string $query = null): string {
-        try {
-            $result = null;
-            $output = [];
-            if ($query == null) {
-            $result = $this->connection->query("SELECT * FROM $table");
-            } elseif($query !== null) {
-                $result = $this->connection->query($query);
-            }
-
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    array_push($output, $row);
-                }
-            }
-            $this->logMessage("db-getAll.txt", "getAll Acessed");
-            return json_encode($output);
-        } catch(Exception $error) {
-            $this->logMessage("db-getAll.txt", $error->getMessage());
-            throw new Exception("Server Error", 500);
-        }
-    }
-
-    public function close(): void {
+    protected function close(): void {
         $this->connection->close();
     }
 
-    private function logMessage(string $fileName, string $message): void {
-        // $time = time();
+    protected function logMessage(string $fileName, string $message): void {
         $dateTime = date_format(new DateTime('now', new DateTimeZone("America/Vancouver")), "Y:m:d H:i:s");
         $this->logger->write_file($fileName, "$message $dateTime");
     }
