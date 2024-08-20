@@ -44,6 +44,7 @@ class Database {
         );
 
         if ($this->connection->connect_error) {
+            $this->logMessage("db-connection-error.txt", "Connection Error");
             die("Connection failed: " . $this->connection->connect_error);
          } //else {
         //     echo "Connected";
