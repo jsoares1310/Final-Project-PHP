@@ -1,8 +1,12 @@
 <?php
 class Customer extends User{
-    public function __construct(int $uid, string $fname, string $lname, string $email, string $phone) {
+    private float $wallet;
+    
+    public function __construct(int $uid, string $fname, string $lname, string $email, string $phone, float $wallet) {    
+        $this->wallet=$wallet;
         parent::__construct($uid, $fname, $lname, $email, $phone);
     }
+    
     public function book_room(User $user){
 
     }
