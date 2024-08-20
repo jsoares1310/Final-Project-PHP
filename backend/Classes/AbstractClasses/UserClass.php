@@ -3,7 +3,7 @@
         private int $uid;
         protected string $fname;
         protected string $lname;
-        protected string $email;
+        protected string $email; 
         protected string $phone;
         
         public function __construct(int $uid, string $fname, string $lname, string $email, string $phone) {
