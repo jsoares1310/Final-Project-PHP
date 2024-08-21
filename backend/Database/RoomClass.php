@@ -4,6 +4,7 @@
     require('./Database/Migrations/RoomsMigrations.php');
     class Room extends Database implements IDB_Room_Methods {
         private string $room_table;
+        private string $log_file;
 
         public function __construct()
         {
@@ -13,6 +14,7 @@
             parent::__construct();
             // table name for the database
             $this->room_table = "rooms";
+            $this->log_file = "rooms-db-log.txt";
         }
 
         // create new room
@@ -42,11 +44,11 @@
 
             if ($action->affected_rows > 0) {
                 http_response_code(201);
-                parent::logMessage("rooms-db-log.txt", "New Room Added");
+                parent::logMessage($this->log_file, "New Room Added");
             }
             $action->close();
            } catch (Exception $error) {
-                parent::logMessage("rooms-db-log.txt", $error->getMessage() . ", Code: " . $error->getCode());
+                parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
            }
 
         }
@@ -69,10 +71,10 @@
                     }
                     $result->close();
                 }
-                parent::logMessage("rooms-db-log.txt", "Get all rooms accessed");
+                parent::logMessage($this->log_file, "Get all rooms accessed");
                 return json_encode($output);
             } catch(Exception $error) {
-                parent::logMessage("rooms-db-log.txt", $error->getMessage() . ", Code: " . $error->getCode());
+                parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
                 throw new Exception("Server Error", 500);
             }
         }
@@ -93,19 +95,42 @@
                 if ($result->fetch()) {
                     $output = ["roomNumber" => $froom_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night];
 
-                    parent::logMessage("rooms-db-log.txt", "Find Room Accessed");
+                    parent::logMessage($this->log_file, "Find Room Accessed");
                 }
 
                 $result->close();
                 
                 return json_encode($output);
             } catch(Exception $error) {
-                parent::logMessage("rooms-db-log.txt", $error->getMessage() . ", Code: " . $error->getCode());
+                parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
             }
         }
-        
+
         public function updateElement(int $room_number): void {}
-        public function deleteElement(int $room_number): void {}
+
+        //Delete a room by it's number
+        public function deleteElement(int $room_number): void {
+            try {
+                $result = $this->connection->prepare("DELETE FROM $this->room_table WHERE room_number = ?");
+
+                $result->bind_param("i", $room_number);
+
+                $result->execute();
+
+                if ($result->affected_rows > 0) {
+                    http_response_code(200);
+                    parent::logMessage($this->log_file, "Room $room_number was deleted");
+                } else {
+                    $result->close();
+                    throw new Exception("Room couldn't be deleted", 400);
+                }
+
+                $result->close();
+                return;
+            } catch(Exception $error) {
+                parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
+            }
+        }
 
         public function close():void {
             parent::close();
