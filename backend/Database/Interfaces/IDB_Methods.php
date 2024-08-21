@@ -9,5 +9,7 @@ interface IDB_Room_Methods {
     public function close(): void;
 }
 
-
+// Remember to create new interfaces for the other Database classes
+// copy the interface that starts on line 3 and adapt the method parameters
+// to fit your new class. Keep the methods names identical.
 ?>
