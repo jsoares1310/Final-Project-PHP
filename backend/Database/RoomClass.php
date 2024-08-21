@@ -106,7 +106,63 @@
             }
         }
 
-        public function updateElement(int $room_number): void {}
+        // update Room accordingly to new_data array
+        // new_data array should be an associate array
+        // with key names being the name of the columns
+        // e.g [
+        //     "room_number" => 101,
+        //     "room_type" => "double",
+        //     "is_available" => true,
+        //     "room_services" => "WiFi, TV",
+        //     "price_per_night" => 120.50
+        // ];
+        public function updateElement(int $room_number, array $new_data): void {
+            try {
+                $count = count(array_keys($new_data));
+                $arrKeys = array_keys($new_data);
+                $types = "";
+                $values = [];
+
+                $query = "UPDATE $this->room_table SET ";
+
+                for($i=0; $i < $count-1; $i++) {
+                        $key = $arrKeys[$i];
+                        $types .= gettype($new_data[$key])[0]; 
+                        // if ($key == "room_service" || $key == "room_type") {
+                        //     array_push($values, "$new_data[$key]");
+                        //     continue;
+                        // }
+                        array_push($values, $new_data[$key]);
+                        $query .= "$key = ?, ";
+                }
+
+                $key = $arrKeys[$count-1];
+                $types .= gettype($new_data[$key])[0];
+                array_push($values, $new_data[$key]);
+                $query .= "$key = ? ";
+                $query .= "WHERE room_number = ?";
+                array_push($values, $room_number);
+                $types .= "i";
+
+                $action = $this->connection->prepare($query);
+
+                $action->bind_param($types, ...$values);
+
+                $action->execute();
+
+
+                if ($action->affected_rows > 0) {
+                    http_response_code(200);
+                    parent::logMessage($this->log_file, "Update Room $room_number Successfull");
+                } else {
+                    throw new Exception("Update Failed. Wrong room or no new changes", 400);
+                }
+
+            } catch (Exception $error) {
+                parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
+                http_response_code(500);
+            }
+        }
 
         //Delete a room by it's number
         public function deleteElement(int $room_number): void {
