@@ -1,11 +1,11 @@
 <?php 
 // all methods that returns a string means that is returning a json
 interface IDB_Room_Methods {
-    public function createElement(int $roomNumber, string $roomType, int $isAvailable, string $roomServices, float $pricePerNight): void;
+    public function createElement(int $room_number, string $room_type, int $is_available, string $room_services, float $price_per_night): void;
     public function getAll(): string;
-    public function findElement(int $id): string;
-    public function updateElement(int $id): void;
-    public function deleteElement(int $id): void;
+    public function findElement(int $room_number): string;
+    public function updateElement(int $room_number, array $new_data): void;
+    public function deleteElement(int $room_number): void;
     public function close(): void;
 }
 
