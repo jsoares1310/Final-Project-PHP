@@ -2,3 +2,45 @@ getAll Acessed . 2024-08-19 06:22:29
 getAll Acessed . 2024-08-19 06:22:45
 getAll Acessed . 2024:08:18 23:32:01
 getAll Acessed 2024:08:18 23:32:31
+getAll Acessed 2024:08:19 23:20:33
+getAll Acessed 2024:08:19 23:27:57
+getAll Acessed 2024:08:19 23:30:03
+Commands out of sync; you can't run this command now 2024:08:19 23:44:54
+Commands out of sync; you can't run this command now 2024:08:19 23:51:05
+getAll Acessed 2024:08:19 23:52:06
+getAll Acessed 2024:08:19 23:55:40
+getAll Acessed 2024:08:19 23:56:50
+getAll Acessed 2024:08:19 23:56:51
+getAll Acessed 2024:08:19 23:57:01
+getAll Acessed 2024:08:19 23:58:34
+getAll Acessed 2024:08:19 23:58:35
+getAll Acessed 2024:08:19 23:58:42
+getAll Acessed 2024:08:20 00:00:10
+getAll Acessed 2024:08:20 00:00:12
+getAll Acessed 2024:08:20 00:00:43
+getAll Acessed 2024:08:20 00:00:44
+getAll Acessed 2024:08:20 00:00:44
+getAll Acessed 2024:08:20 00:00:44
+getAll Acessed 2024:08:20 00:00:44
+getAll Acessed 2024:08:20 00:02:41
+getAll Acessed 2024:08:20 00:03:22
+getAll Acessed 2024:08:20 00:03:53
+getAll Acessed 2024:08:20 00:04:37
+getAll Acessed 2024:08:20 00:04:48
+getAll Acessed 2024:08:20 00:04:49
+getAll Acessed 2024:08:20 00:04:58
+getAll Acessed 2024:08:20 00:05:35
+getAll Acessed 2024:08:20 00:06:10
+getAll Acessed 2024:08:20 01:16:41
+getAll Acessed 2024:08:20 01:17:08
+getAll Acessed 2024:08:20 01:17:09
+getAll Acessed 2024:08:20 01:18:59
+getAll Acessed 2024:08:20 01:23:11
+getAll Acessed 2024:08:20 01:23:11
+getAll Acessed 2024:08:20 01:23:11
+getAll Acessed 2024:08:20 01:23:12
+getAll Acessed 2024:08:20 01:23:13
+getAll Acessed 2024:08:20 01:24:06
+getAll Acessed 2024:08:20 01:24:24
+Get all rooms acessed 2024:08:20 01:26:36
+Get all rooms acessed 2024:08:20 01:53:54
