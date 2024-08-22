@@ -34,28 +34,37 @@
         public function checkAvailability(): bool {
             return $this->is_available;
         }
+
         // Books the room, changing its availability status.
-        public function bookRoom(int $numberOfNights) {
-            if($this->is_available) {
-                $this->is_available = false;
-                return "Room {$this->room_number} is booked for {$numberOfNights} nights.";
-            } else {
-                return "Room {$this->room_number} is not available";
+        public function bookRoom(int $room_number) {
+            try {
+                $this->room->updateElement($room_number, ["is_available" => false]);
+            } catch(Exception $error) {
+
             }
         }
+
         // Handles the checkout process, making the room available again
-        public function checkout() {
-            $this->is_available = true;
-            return "Room {$this->room_number} is now available";
+        public function checkout(int $room_number) {
+            try {
+                $this->room->updateElement($room_number, ["is_available" => true]);
+            } catch(Exception $error) {
+
+            }
         }
+
         // Calculates the total cost of the stay based on the number of nights and the price per night.
         public function calculateTotalCost($numberOfNights) {
             return $numberOfNights * $this->price_per_night;
         }
+
         // Updates the price per night for the room.
-        public function updateRoomPrice(float $newPrice) {
-            $this -> price_per_night = $newPrice;
-            return "The price for room {$this->room_number} is now {$newPrice} per night";
+        public function updateRoomPrice(int $room_number, float $new_price) {
+            try {
+                $this->room->updateElement($room_number, ["price_per_night" => $new_price]);
+            } catch(Exception $error) {
+
+            }   
         }
     }
 
