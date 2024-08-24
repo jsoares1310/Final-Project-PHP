@@ -60,16 +60,15 @@
                 
                 $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night FROM $this->room_table");
 
-                $result->execute();
-                
-                $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night);
-                
-
-                if ($result->field_count > 0) {
+                if ($result->execute()) {
+                    $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night);
                     while($result->fetch()) {
                         array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night ]);
                     }
                     $result->close();
+                } else {
+                    $result->close();
+                    throw new Exception("Failed to get all rooms", 500);
                 }
                 parent::logMessage($this->log_file, "Get all rooms accessed");
                 return json_encode($output);
