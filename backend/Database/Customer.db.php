@@ -40,15 +40,16 @@ class Customer extends Database implements IDB_Customer_Methods {
                 }
     
                 $action->close();
-
+                http_response_code(200);
             } else {
                 $action->close();
+                http_response_code(500);
                 throw new Exception("Failed to get all Customers", 500);
             }
             
             return json_encode($output);
         } catch(Exception $error) {
-            parent::logMessage($this->log_file, $error->getMessage());
+            parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
         }
     }
 
@@ -73,20 +74,45 @@ class Customer extends Database implements IDB_Customer_Methods {
                     ];
                 }
                 $action->close();
+                http_response_code(200);
             } else {
                 $action->close();
+                http_response_code(500);
                 throw new Exception("Find customer failed", 500);
             }
 
             return json_encode($output);
         } catch(Exception $error) {
-            parent::logMessage($this->log_file, $error->getMessage());
+            parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
         }
     }
 
     public function updateElement(string $email, array $new_data): void {}
 
-    public function deleteElement(string $email): void {}
+    public function deleteElement(string $email): void {
+        try {
+            $query = "DELETE FROM $this->customer_table WHERE email=?";
+            $action = $this->connection->prepare($query);
+
+            $action->bind_param("s", $email);
+
+            $action->execute();
+
+            if ($action->affected_rows > 0) {
+                http_response_code(200);
+                parent::logMessage($this->log_file, "$email : Customer deleted");
+                $action->close();
+            } else {
+                $action->close();
+                http_response_code(500);
+                throw new Exception("$email : Customer deletion failed", 500);
+            }
+
+
+        }catch(Exception $error) {
+            parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
+        }
+    }
 
     public function logMessage(string $file_name, string $message): void {
         parent::logMessage($file_name, $message);
