@@ -36,13 +36,20 @@ class RoomsMigrations extends Database {
             $query = "SHOW TABLES LIKE 'rooms'";
             $action = $this->connection->query($query);
 
-            if ($action->num_rows > 0) {
-                return;
-            } else {
+            if ($action->num_rows == 0) {
                 // if the table rooms doesn't exists, create.
-                $this->createRoomTable();
+                $this->createRoomTable();   
+            }
+
+            $imageQuery = "SHOW TABLES LIKE 'room_image'";
+            $actionImage = $this->connection->query($imageQuery);
+
+            if ($actionImage -> num_rows == 0) {
                 $this->createRoomImageTable();
             }
+
+            $action->free();
+            $actionImage->free();
 
         } catch (Exception $error) {
             parent::logMessage($this->logFile, $error->getMessage());
@@ -79,7 +86,7 @@ class RoomsMigrations extends Database {
                 image_url VARCHAR(255) NOT NULL,
                 uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
-)";
+                )";
             if ($this->connection->query($query)) {
                 parent::logMessage($this->logFile, "Room image Table Created");
             } else {
