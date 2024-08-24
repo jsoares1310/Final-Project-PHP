@@ -1,11 +1,11 @@
 <?php 
-// require("./Database/Room.db.php");
+require("./Database/Room.db.php");
 
-// $db = new Room();
+$db = new Room();
 // echo "<br/>";
 // print_r($db->getAll());
 // $db->createElement(112, 'single', 1, 'WiFi, TV', 7500.90);
-// print_r($db->findElement(112));
+print_r($db->findElement(112));
 // $db->deleteElement(105);
 // $db->updateElement(101, [
 //         // "room_number" => 103,
@@ -14,7 +14,7 @@
 //         // "room_service" => "WiFi, TV, Air, Bar",
 //         "price_per_night" => 120.55
 //     ]);
-// $db->close();
+$db->close();
 
 // require ("./Database/Customer.db.php");
 
