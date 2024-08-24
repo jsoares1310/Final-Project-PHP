@@ -66,14 +66,14 @@ class Customer extends Database implements IDB_Customer_Methods {
                 $action->bind_result($first_name, $last_name, $phone, $email, $wallet_balance, $is_blocked);
 
                 while($action->fetch()) {
-                    $output += [
+                    array_push($output, [
                         "first_name" => $first_name,
                         "last_name" => $last_name,
                         "phone" => $phone,
                         "email" => $email,
                         "wallet_balance" => $wallet_balance,
                         "is_blocked" => $is_blocked
-                    ]; 
+                    ]);
                 }
     
                 $action->close();
