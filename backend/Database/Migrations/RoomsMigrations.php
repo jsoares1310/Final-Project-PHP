@@ -2,9 +2,10 @@
 
 // require("./Database/DatabaseClass.php");
 class RoomsMigrations extends Database {
-    
+    private string $logFile;
+
     public function __construct() {
-        
+        $this -> logFile = "database-migration.txt";
         parent::__construct();
         $this->checkIfTableExists();
         $this->checkIfDataExists();
@@ -26,7 +27,7 @@ class RoomsMigrations extends Database {
             }
 
         } catch (Exception $error) {
-            parent::logMessage("database-migration.txt", $error->getMessage());
+            parent::logMessage($this->logFile, $error->getMessage());
         }
     }
 
@@ -43,7 +44,7 @@ class RoomsMigrations extends Database {
             }
 
         } catch (Exception $error) {
-            parent::logMessage("database-migration.txt", $error->getMessage());
+            parent::logMessage($this->logFile, $error->getMessage());
         }
     }
 
@@ -60,12 +61,12 @@ class RoomsMigrations extends Database {
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                     )";
             if ($this->connection->query($query)) {
-                parent::logMessage("database-migration.txt", "Room Table Created");
+                parent::logMessage($this->logFile, "Room Table Created");
             } else {
                 throw new Exception("Room table creation failed", 500);
             }
         } catch (Exception $error) {
-            parent::logMessage("database-migration.txt", $error->getMessage());
+            parent::logMessage($this->logFile, $error->getMessage());
         }
     }
 
@@ -83,12 +84,12 @@ class RoomsMigrations extends Database {
                         (109, 'suite', 1, 'WiFi, TV, Mini Bar, Jacuzzi, Room Service', 300.00),
                         (110, 'single', 1, 'WiFi, TV, Mini Bar', 85.00)";
             if ($this->connection->query($query)) {
-                parent::logMessage("database-migration.txt", "Inserted default rooms to the table");
+                parent::logMessage($this->logFile, "Inserted default rooms to the table");
             } else {
                 throw new Exception("Room insertion failed", 500);
             }
         } catch (Exception $error) {
-            parent::logMessage("database-migration.txt", $error->getMessage());
+            parent::logMessage($this->logFile, $error->getMessage());
         }
     }
 
