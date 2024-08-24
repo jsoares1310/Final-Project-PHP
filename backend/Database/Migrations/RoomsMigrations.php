@@ -23,7 +23,7 @@ class RoomsMigrations extends Database {
                 return;
             } else {
                 // if rooms have no data, use the insert.
-                $this->insertInitialData();
+                $this->insertInitialRoomData();
             }
 
         } catch (Exception $error) {
@@ -35,12 +35,13 @@ class RoomsMigrations extends Database {
         try {
             $query = "SHOW TABLES LIKE 'rooms'";
             $action = $this->connection->query($query);
-            // $result = $action->fetch_assoc();
+
             if ($action->num_rows > 0) {
                 return;
             } else {
                 // if the table rooms doesn't exists, create.
-                $this->createTable();
+                $this->createRoomTable();
+                $this->createRoomImageTable();
             }
 
         } catch (Exception $error) {
@@ -48,7 +49,7 @@ class RoomsMigrations extends Database {
         }
     }
 
-    private function createTable() {
+    private function createRoomTable() {
         try {
             $query = "CREATE TABLE IF NOT EXISTS rooms (
 	                id INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +71,26 @@ class RoomsMigrations extends Database {
         }
     }
 
-    private function insertInitialData() {
+    private function createRoomImageTable() {
+        try {
+            $query = "CREATE TABLE IF NOT EXISTS room_image (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                room_id INT NOT NULL,
+                image_url VARCHAR(255) NOT NULL,
+                uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
+)";
+            if ($this->connection->query($query)) {
+                parent::logMessage($this->logFile, "Room image Table Created");
+            } else {
+                throw new Exception("Room image table creation failed", 500);
+            }
+        } catch (Exception $error) {
+            parent::logMessage($this->logFile, $error->getMessage());
+        }
+    }
+
+    private function insertInitialRoomData() {
         try {
             $query = "INSERT INTO rooms (room_number, room_type, is_available, room_service, price_per_night) VALUES
                         (101, 'single', 1, 'WiFi, TV', 75.00),
