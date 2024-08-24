@@ -90,3 +90,14 @@ Update Failed, Code: 400 2024:08:21 05:28:43
 Update Room 102 Successfull 2024:08:21 05:29:14
 Update Failed. Wrong room or no new changes, Code: 400 2024:08:21 05:31:13
 Update Room 102 Successfull 2024:08:21 05:31:49
+Get all rooms accessed 2024:08:23 16:59:46
+Update Room 101 Successfull 2024:08:23 17:01:18
+New Room Added 2024:08:23 22:14:52
+Find Room Accessed 2024:08:23 22:14:52
+Room already exists, Code: 406 2024:08:23 22:15:25
+Find Room Accessed 2024:08:23 22:15:25
+Room already exists, Code: 406 2024:08:23 22:30:09
+Room already exists, Code: 406 2024:08:23 22:30:36
+Room already exists, Code: 406 2024:08:23 22:30:44
+Room already exists, Code: 406 2024:08:23 22:30:51
+Room already exists, Code: 406 2024:08:23 22:30:58

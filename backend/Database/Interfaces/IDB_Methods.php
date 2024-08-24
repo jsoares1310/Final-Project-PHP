@@ -22,8 +22,8 @@ interface IDB_Customer_Methods {
 // Remember to create new interfaces for the other Database classes
 // copy the interface that starts on line 3 and adapt the method parameters
 // to fit your new class. Keep the methods names identical.
-?>
 
 
 // Remember to add log method to the interfaces;
 // the log method will implement the parent logMessage method;
+?>

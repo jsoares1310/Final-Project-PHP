@@ -34,3 +34,9 @@ You have an error in your SQL syntax; check the manual that corresponds to your 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rooms' at line 1 2024:08:21 02:14:43
 Room Table Created 2024:08:21 02:18:14
 Inserted default rooms to the table 2024:08:21 02:18:14
+Room Table Created 2024:08:23 16:59:46
+Inserted default rooms to the table 2024:08:23 16:59:46
+Customer table created 2024:08:23 18:53:44
+Insert default values to Customer 2024:08:23 18:53:44
+Insert default values to Customer 2024:08:23 20:50:04
+Insert default values to Customer 2024:08:23 21:18:22
