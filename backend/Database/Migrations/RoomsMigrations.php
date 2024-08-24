@@ -55,7 +55,9 @@ class RoomsMigrations extends Database {
                     room_type ENUM('single', 'double', 'suite') NOT NULL,
                     is_available TINYINT NOT NULL DEFAULT 1,
                     room_service VARCHAR(400) NOT NULL,
-                    price_per_night FLOAT NOT NULL
+                    price_per_night DECIMAL(8, 2) NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                     )";
             if ($this->connection->query($query)) {
                 parent::logMessage("database-migration.txt", "Room Table Created");
