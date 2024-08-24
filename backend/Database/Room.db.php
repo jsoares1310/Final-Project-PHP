@@ -88,16 +88,21 @@
             try {
                 $output = [];
 
-                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night FROM $this->room_table WHERE room_number = ?");
+                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night, image_url FROM $this->room_table LEFT JOIN $this->image_table ON $this->image_table.room_id = $this->room_table.id WHERE room_number = ?");
 
                 $result->bind_param("i", $room_number);
 
                 $result->execute();
 
-                $result->bind_result($froom_number, $room_type, $is_available, $room_services, $price_per_night);
+                $result->bind_result($froom_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
 
                 if ($result->fetch()) {
-                    $output = ["roomNumber" => $froom_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night];
+                    $output = [
+                        "roomNumber" => $froom_number, 
+                        "roomType" => $room_type, 
+                        "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
+                        "image_url" => $image_url ? $image_url : ""
+                    ];
 
                     parent::logMessage($this->log_file, "Find Room Accessed");
                 }
