@@ -53,9 +53,35 @@ class Customer extends Database implements IDB_Customer_Methods {
     }
 
     public function findElement(string $email): string {
-        $output = [];
+        try {
+            $output = [];
+            $query = "SELECT first_name, last_name, phone, email, wallet_balance, is_blocked FROM $this->customer_table WHERE email=?";
+            $action = $this->connection->prepare($query);
 
-        return json_encode($output);
+            $action->bind_param("s", $email);
+
+            if ($action->execute()) {
+                $action->bind_result($first_name, $last_name, $phone, $email, $wallet_balance, $is_blocked);
+                while($action->fetch()) {
+                    $output += [
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "phone" => $phone,
+                        "email" => $email,
+                        "wallet_balance" => $wallet_balance,
+                        "is_blocked" => $is_blocked
+                    ];
+                }
+                $action->close();
+            } else {
+                $action->close();
+                throw new Exception("Find customer failed", 500);
+            }
+
+            return json_encode($output);
+        } catch(Exception $error) {
+            parent::logMessage($this->log_file, $error->getMessage());
+        }
     }
 
     public function updateElement(string $email, array $new_data): void {}
