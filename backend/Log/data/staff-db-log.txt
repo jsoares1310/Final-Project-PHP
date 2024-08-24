@@ -1,0 +1,3 @@
+test@test.com: Staff member registered 2024:08:24 01:05:04
+Staff member updated test@test.com 2024:08:24 01:17:16
+newTest@test.com : Staff member deleted 2024:08:24 01:18:10

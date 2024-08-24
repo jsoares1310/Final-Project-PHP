@@ -18,3 +18,5 @@ You have an error in your SQL syntax; check the manual that corresponds to your 
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '@outlook.com' at line 1, Code: 1064 2024:08:23 22:25:22
 victor@outlook.com: Customer registered 2024:08:23 22:28:48
 Customer already exists, Code: 406 2024:08:23 22:29:42
+Customer already exists, Code: 406 2024:08:24 01:31:12
+Customer already exists, Code: 406 2024:08:24 01:32:11

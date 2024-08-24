@@ -1,13 +1,7 @@
 <?php 
+// require("./Database/Room.db.php");
 
-// echo "Testing server";
-// echo "</br>";
-
-// echo "Php working from docker"
-
-require("./Database/Room.db.php");
-
-$db = new Room();
+// $db = new Room();
 // echo "<br/>";
 // print_r($db->getAll());
 // $db->createElement(112, 'single', 1, 'WiFi, TV', 7500.90);
@@ -26,14 +20,30 @@ $db = new Room();
 
 // $cusDb = new Customer();
 
+
+// $cusDb->createElement('victor', 'araujo', '1234567890', 'victor@outlook.com', 'admin');
 // print_r($cusDb->getAll());
 // print_r($cusDb->findElement("john.doe@example.com"));
 // $cusDb->deleteElement("john.doe@example.com");
 // $cusDb->updateElement("john.doe@example.com", [
 //     "last_name" => 'eoD',
 // ]);
-// $cusDb->createElement('victor', 'araujo', '1234567890', 'victor@outlook.com', 'admin');
+
 
 // $cusDb->close();
+
+// require("./Database/Staff.db.php");
+
+// $stdb = new Staff();
+
+// $stdb->createElement('OhMah', 'Gah', '1234567890', 'test@test.com', '123456', 'staff');
+// print_r($stdb->getAll());
+// print_r($stdb->findElement('test@test.com'));
+// $stdb->updateElement('test@test.com', [
+//     "email" => 'newTest@test.com'
+// ]);
+// $stdb->deleteElement('newTest@test.com');
+
+// $stdb->close();
 
 ?>
