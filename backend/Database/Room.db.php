@@ -127,10 +127,7 @@
                 for($i=0; $i < $count-1; $i++) {
                         $key = $arrKeys[$i];
                         $types .= gettype($new_data[$key])[0]; 
-                        // if ($key == "room_service" || $key == "room_type") {
-                        //     array_push($values, "$new_data[$key]");
-                        //     continue;
-                        // }
+                        
                         array_push($values, $new_data[$key]);
                         $query .= "$key = ?, ";
                 }
@@ -152,9 +149,11 @@
 
                 if ($action->affected_rows > 0) {
                     http_response_code(200);
+                    $action->close();
                     parent::logMessage($this->log_file, "Update Room $room_number Successfull");
-                } else {
-                    throw new Exception("Update Failed. Wrong room or no new changes", 400);
+                } elseif($action->affected_rows < 0){
+                    $action->close();
+                    throw new Exception("Update room $room_number: Nothing changed", 204);
                 }
 
             } catch (Exception $error) {
