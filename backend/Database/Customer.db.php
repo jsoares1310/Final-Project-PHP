@@ -16,7 +16,44 @@ class Customer extends Database implements IDB_Customer_Methods {
         $this->log_file = "customer-db-log.txt";
     }
 
-    public function createElement(string $first_name, string $last_name, string $phone, string $email, string $password, float $wallet_balance=0.00): void {}
+    public function createElement(string $first_name, string $last_name, string $phone, string $email, string $password, float $wallet_balance = 0.00): void {
+        try {
+            // Checks if customer exists
+            $verify = $this->connection->prepare("SELECT email FROM $this->customer_table WHERE email=?");
+
+            $verify->bind_param("s", $email);
+            $verify->execute();
+            $verify->bind_result($result);
+            $verify->fetch();
+            
+            if ($result) {
+                $verify->close();
+                throw new Exception("Customer already exists", 406);
+            } else {
+                $verify->close();
+            }
+
+            // Create new customer
+            $query = "INSERT INTO $this->customer_table (first_name, last_name, phone, email, password, wallet_balance) VALUES (?,?,?,?,?,?)";
+            $action = $this->connection->prepare($query);
+            
+            $action->bind_param("sssssd", $first_name, $last_name, $phone, $email, $password, $wallet_balance);
+
+            $action->execute();
+
+            if ($action->affected_rows > 0) {
+                http_response_code(201);
+                $action->close();
+                parent::logMessage($this->log_file, "$email: Customer registered");
+            } else {
+                $action->close();
+                throw new Exception("Customer $email registration failed", 500);
+            }
+            
+        } catch(Exception $error) {
+            parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
+        }
+    }
 
     public function getAll(): string {
         try {
@@ -87,6 +124,18 @@ class Customer extends Database implements IDB_Customer_Methods {
         }
     }
 
+    // update Customer accordingly to new_data array
+        // new_data array should be an associate array
+        // with key names being the name of the columns
+        // password can be updated here.
+        // e.g [
+        //     "first_name" => '',
+        //     "last_name" => '',
+        //     "phone" => '', max 15 char
+        //     "email" => '',
+        //     "wallet_balance" => 100.90,
+        //     "is_blocked" => 0 or 1,
+        // ];
     public function updateElement(string $email, array $new_data): void {
         try {
             $count = count(array_keys($new_data));
