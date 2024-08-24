@@ -23,8 +23,9 @@
         public function createElement(int $room_number, string $room_type, int $is_available, string $room_services, float $price_per_night): void
         {
            try {
-            $verify = $this->connection->prepare("SELECT room_number FROM $this->room_table WHERE room_number=$room_number");
+            $verify = $this->connection->prepare("SELECT room_number FROM $this->room_table WHERE room_number=?");
 
+            $verify->bind_param("i", $room_number);
             $verify->execute();
             $verify->bind_result($r);
             $verify->fetch();
