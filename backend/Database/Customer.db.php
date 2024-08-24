@@ -87,7 +87,54 @@ class Customer extends Database implements IDB_Customer_Methods {
         }
     }
 
-    public function updateElement(string $email, array $new_data): void {}
+    public function updateElement(string $email, array $new_data): void {
+        try {
+            $count = count(array_keys($new_data));
+            $arrKeys = array_keys($new_data);
+            $types = "";
+            $values = [];
+
+            $query = "UPDATE $this->customer_table SET ";
+
+            for($i=0; $i < $count-1; $i++) {
+                $key = $arrKeys[$i];
+                $types .= gettype($new_data[$key])[0]; 
+
+                array_push($values, $new_data[$key]);
+                $query .= "$key = ?, ";
+            }
+
+            //might get an error if the new_data array is empty
+            $key = $arrKeys[$count-1];
+            $types .= gettype($new_data[$key])[0];
+            array_push($values, $new_data[$key]);
+            $query .= "$key = ? ";
+            $query .= "WHERE email = ?";
+            // here push the last value for the update
+            // the type appended needs to follow the last value type
+            array_push($values, $email);
+            $types .= "s";
+
+            $action = $this->connection->prepare($query);
+
+            $action->bind_param($types, ...$values);
+
+            $action->execute();
+
+
+            if ($action->affected_rows > 0) {
+                http_response_code(200);
+                $action->close();
+                parent::logMessage($this->log_file, "Customer updated $email");
+            } elseif ($action->affected_rows < 0) {
+                $action->close();
+                throw new Exception("Update customer $email: Nothing changed", 204);
+            }
+
+        } catch (Exception $error) {
+            parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
+        }
+    }
 
     public function deleteElement(string $email): void {
         try {
@@ -107,7 +154,6 @@ class Customer extends Database implements IDB_Customer_Methods {
                 http_response_code(500);
                 throw new Exception("$email : Customer deletion failed", 500);
             }
-
 
         }catch(Exception $error) {
             parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
