@@ -19,6 +19,16 @@ interface IDB_Customer_Methods {
     public function close(): void;
 }
 
+interface IDB_Staff_Methods {
+    public function createElement(string $first_name, string $last_name, string $phone, string $email, string $password, string $role): void;
+    public function getAll(): string;
+    public function findElement(string $email): string;
+    public function updateElement(string $email, array $new_data): void;
+    public function deleteElement(string $email): void;
+    public function logMessage(string $file_name, string $message): void;
+    public function close(): void;
+}
+
 // Remember to create new interfaces for the other Database classes
 // copy the interface that starts on line 3 and adapt the method parameters
 // to fit your new class. Keep the methods names identical.
