@@ -2,11 +2,11 @@
 
 class CustomerMigration extends Database {
 
-    private string $logFile;
+    private string $log_file;
 
     public function __construct()
     {
-        $this -> logFile = "database-migration.txt";
+        $this -> log_file = "database-migration.txt";
         parent::__construct();
         $this->checkIfTableExists();
         $this->checkIfDataExists();
@@ -25,7 +25,7 @@ class CustomerMigration extends Database {
                 $this->createCustomerTable();
             }
         } catch(Exception $error) {
-            parent::logMessage($this->logFile, $error->getMessage());
+            parent::logMessage($this->log_file, $error->getMessage());
         }
     }
 
@@ -43,7 +43,7 @@ class CustomerMigration extends Database {
             }
 
         } catch (Exception $error) {
-            parent::logMessage($this->logFile, $error->getMessage());
+            parent::logMessage($this->log_file, $error->getMessage());
         }
     }
 
@@ -64,12 +64,12 @@ class CustomerMigration extends Database {
 
             $action = $this->connection->query($query);
             if ($action) {
-                parent::logMessage($this->logFile, "Customer table created");
+                parent::logMessage($this->log_file, "Customer table created");
             } else {
                 throw new Exception("Customer table creation failed", 500);
             }
         } catch(Exception $error) {
-            parent::logMessage($this->logFile, "Customer table:" . $error->getMessage());
+            parent::logMessage($this->log_file, "Customer table:" . $error->getMessage());
         }
     }
 
@@ -80,12 +80,12 @@ class CustomerMigration extends Database {
             $action = $this->connection->query($query);
 
             if ($action) {
-                parent::logMessage($this->logFile, "Insert default values to Customer");
+                parent::logMessage($this->log_file, "Insert default values to Customer");
             } else {
                 throw new Exception("Insert default value to customer failed", 500);
             }
         } catch(Exception $error) {
-            parent::logMessage($this->logFile, "Insert Customer Data: " . $error->getMessage());
+            parent::logMessage($this->log_file, "Insert Customer Data: " . $error->getMessage());
         } 
     }
 
