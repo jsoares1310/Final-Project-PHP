@@ -4,6 +4,7 @@
     require('./Database/Migrations/RoomsMigrations.php');
     class Room extends Database implements IDB_Room_Methods {
         private string $room_table;
+        private string $image_table;
         private string $log_file;
 
         public function __construct()
@@ -14,6 +15,7 @@
             parent::__construct();
             // table name for the database
             $this->room_table = "rooms";
+            $this->image_table = "room_image";
             $this->log_file = "rooms-db-log.txt";
         }
 
@@ -59,12 +61,14 @@
                 $result = null;
                 $output = [];
                 
-                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night FROM $this->room_table");
+                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night, image_url FROM $this->room_table LEFT JOIN room_image ON $this->image_table.room_id = $this->room_table.id");
 
                 if ($result->execute()) {
-                    $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night);
+                    $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
                     while($result->fetch()) {
-                        array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night ]);
+                        array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
+                        "image_url" => $image_url ? $image_url : ''
+                     ]);
                     }
                     $result->close();
                 } else {
