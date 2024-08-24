@@ -32,6 +32,8 @@ class Customer extends Database implements IDB_Customer_Methods {
     public function logMessage(string $file_name, string $message): void {
         parent::logMessage($file_name, $message);
     }
-    public function close(): void {}
+    public function close(): void {
+        parent::close();
+    }
 }
 ?>
