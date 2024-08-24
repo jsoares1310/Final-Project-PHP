@@ -125,7 +125,7 @@
         //     "room_services" => "WiFi, TV",
         //     "price_per_night" => 120.50
         // ];
-        public function updateElement(int $room_number, array $new_data): void {
+        public function updateElement(int $room_number, array $new_data, string $update_image=null): void {
             try {
                 $count = count(array_keys($new_data));
                 $arrKeys = array_keys($new_data);
@@ -158,7 +158,6 @@
 
 
                 if ($action->affected_rows > 0) {
-                    http_response_code(200);
                     $action->close();
                     parent::logMessage($this->log_file, "Update Room $room_number Successfull");
                 } elseif($action->affected_rows < 0){
@@ -166,9 +165,49 @@
                     throw new Exception("Update room $room_number: Nothing changed", 204);
                 }
 
+                if ($update_image) {
+                    $this->updateRoomImage($room_number, $update_image);
+                }
+                http_response_code(200);
             } catch (Exception $error) {
                 parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
                 http_response_code(500);
+            }
+        }
+
+        private function updateRoomImage(int $room_number, string $new_image_url) {
+            $room_id = null;
+            // get room id first
+            $query = "SELECT id FROM $this->room_table WHERE room_number = ?";
+            $action = $this->connection->prepare($query);
+            $action->bind_param("i", $room_number);
+
+            if ($action->execute()) {
+                $action->bind_result($id);
+                if ($action->fetch()) $room_id = $id;
+                $action->close();
+            } else {
+                $action->close();
+                throw new Exception("Failed to update room image", 500);
+            }
+
+            // update image_url associated with the room id
+
+            $updateQuery = "UPDATE $this->image_table SET image_url = ? WHERE room_id = ?";
+            $updateAction = $this->connection->prepare($updateQuery);
+            $updateAction->bind_param("si", $new_image_url, $room_id);
+
+            $updateAction->execute();
+
+            if ($updateAction->affected_rows > 0) {
+                $updateAction->close();
+                parent::logMessage($this->log_file, "Updated Room $room_number image ");
+            } elseif($action->affected_rows < 0) {
+                $updateAction->close();
+                throw new Exception("Update room $room_number image : Nothing changed", 204);
+            } else {
+                $updateAction->close();
+                throw new Exception("Update room $room_number image : Failed", 500);
             }
         }
 
