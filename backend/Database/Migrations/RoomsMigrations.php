@@ -60,7 +60,7 @@ class RoomsMigrations extends Database {
         try {
             $query = "CREATE TABLE IF NOT EXISTS rooms (
 	                id INT AUTO_INCREMENT PRIMARY KEY,
-                    room_number SMALLINT NOT NULL UNIQUE,
+                    room_number INT NOT NULL UNIQUE,
                     room_type ENUM('single', 'double', 'suite') NOT NULL,
                     is_available TINYINT NOT NULL DEFAULT 1,
                     room_service VARCHAR(400) NOT NULL,

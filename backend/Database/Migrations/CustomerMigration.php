@@ -1,5 +1,5 @@
 <?php 
-
+require_once("./Database/DatabaseClass.php"); 
 class CustomerMigration extends Database {
 
     private string $log_file;
