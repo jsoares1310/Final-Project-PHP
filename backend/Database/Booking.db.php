@@ -95,27 +95,29 @@
             try {
                 $output = [];
 
-                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night, image_url FROM $this->booking_table LEFT JOIN $this->image_table ON $this->image_table.room_id = $this->booking_table.id WHERE room_number = ?");
+                $result = $this->connection->prepare("SELECT id, customer_email, room_number, check_in, check_out, status, total_price FROM $this->booking_table WHERE id = ?");
 
-                $result->bind_param("i", $room_number);
+                $result->bind_param("i", $booking_id);
 
                 $result->execute();
 
-                $result->bind_result($froom_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
+                $result->bind_result($id, $customer_email, $room_number, $check_in, $check_out, $status, $total_price);
 
                 if ($result->fetch()) {
                     $output = [
-                        "roomNumber" => $froom_number, 
-                        "roomType" => $room_type, 
-                        "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
-                        "image_url" => $image_url ? $image_url : ""
+                        "id" => $id,
+                        "customer_email" => $customer_email, 
+                        "room_number" => $room_number, 
+                        "check_in" => $check_in,
+                        "check_out" => $check_out,
+                        "status" => $status,
+                        "total_price" => $total_price
                     ];
-
-                    parent::logMessage($this->log_file, "Find Room Accessed");
                 }
 
                 $result->close();
-                
+                http_response_code(200);
+                parent::logMessage($this->log_file, "Find booking accessed");
                 return json_encode($output);
             } catch(Exception $error) {
                 parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
