@@ -1,6 +1,6 @@
 <?php 
 
-// require("./Database/DatabaseClass.php");
+require_once("./Database/DatabaseClass.php");
 class RoomsMigrations extends Database {
     private string $logFile;
 
