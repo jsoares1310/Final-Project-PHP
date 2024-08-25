@@ -32,7 +32,8 @@
             
             if ($result) {
                 $verify->close();
-                throw new Exception("Booking already exists", 406);
+                http_response_code(400);
+                throw new Exception("Booking already exists", 400);
             } else {
                 $verify->close();
             }
@@ -49,7 +50,6 @@
             }
             $action->close();
            } catch (Exception $error) {
-                http_response_code(500);
                 parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
            }
 
@@ -66,7 +66,7 @@
                     $result->bind_result($id, $customer_email, $room_number, $check_in, $check_out, $status, $total_price);
                     while($result->fetch()) {
                         array_push($output, [
-                            "id" => $id, "roomType" => $id, 
+                            "id" => $id,
                             "customer_email" => $customer_email, 
                             "room_number" => $room_number, 
                             "check_in" => $check_in,
@@ -81,7 +81,7 @@
                     http_response_code(500);
                     throw new Exception("Failed to get all bookings", 500);
                 }
-                parent::logMessage($this->log_file, "Get all rooms accessed");
+                parent::logMessage($this->log_file, "Get all bookings accessed");
                 http_response_code(200);
                 return json_encode($output);
             } catch(Exception $error) {
