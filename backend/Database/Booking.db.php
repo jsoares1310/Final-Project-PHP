@@ -185,21 +185,21 @@
         //Delete a booking by it's id number
         public function deleteElement(int $booking_id): void {
             try {
-                $result = $this->connection->prepare("DELETE FROM $this->booking_table WHERE room_number = ?");
+                $result = $this->connection->prepare("DELETE FROM $this->booking_table WHERE id = ?");
 
-                $result->bind_param("i", $room_number);
+                $result->bind_param("i", $booking_id);
 
                 $result->execute();
 
                 if ($result->affected_rows > 0) {
+                    $result->close();
                     http_response_code(200);
-                    parent::logMessage($this->log_file, "Room $room_number was deleted");
+                    parent::logMessage($this->log_file, "Booking: $booking_id was deleted");
                 } else {
                     $result->close();
-                    throw new Exception("Room couldn't be deleted", 400);
+                    throw new Exception("Booking couldn't be deleted", 400);
                 }
-
-                $result->close();
+                
                 return;
             } catch(Exception $error) {
                 parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
