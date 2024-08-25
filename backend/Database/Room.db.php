@@ -1,19 +1,19 @@
 <?php
-    require("./Database/DatabaseClass.php");
-    require("./Database/Interfaces/IDB_Methods.php");
-    require('./Database/Migrations/RoomsMigrations.php');
+    require_once("./Database/DatabaseClass.php");
+    require_once("./Database/Interfaces/IDB_Methods.php");
+    
     class Room extends Database implements IDB_Room_Methods {
         private string $room_table;
+        private string $image_table;
         private string $log_file;
 
         public function __construct()
         {
-            // create initial tables and data
-            new RoomsMigrations();
             // initialize parent
             parent::__construct();
             // table name for the database
             $this->room_table = "rooms";
+            $this->image_table = "room_image";
             $this->log_file = "rooms-db-log.txt";
         }
 
@@ -23,8 +23,9 @@
         public function createElement(int $room_number, string $room_type, int $is_available, string $room_services, float $price_per_night): void
         {
            try {
-            $verify = $this->connection->prepare("SELECT room_number FROM $this->room_table WHERE room_number=$room_number");
+            $verify = $this->connection->prepare("SELECT room_number FROM $this->room_table WHERE room_number=?");
 
+            $verify->bind_param("i", $room_number);
             $verify->execute();
             $verify->bind_result($r);
             $verify->fetch();
@@ -58,18 +59,19 @@
                 $result = null;
                 $output = [];
                 
-                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night FROM $this->room_table");
+                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night, image_url FROM $this->room_table LEFT JOIN room_image ON $this->image_table.room_id = $this->room_table.id");
 
-                $result->execute();
-                
-                $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night);
-                
-
-                if ($result->field_count > 0) {
+                if ($result->execute()) {
+                    $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
                     while($result->fetch()) {
-                        array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night ]);
+                        array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
+                        "image_url" => $image_url ? $image_url : ''
+                     ]);
                     }
                     $result->close();
+                } else {
+                    $result->close();
+                    throw new Exception("Failed to get all rooms", 500);
                 }
                 parent::logMessage($this->log_file, "Get all rooms accessed");
                 return json_encode($output);
@@ -84,16 +86,21 @@
             try {
                 $output = [];
 
-                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night FROM $this->room_table WHERE room_number = ?");
+                $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night, image_url FROM $this->room_table LEFT JOIN $this->image_table ON $this->image_table.room_id = $this->room_table.id WHERE room_number = ?");
 
                 $result->bind_param("i", $room_number);
 
                 $result->execute();
 
-                $result->bind_result($froom_number, $room_type, $is_available, $room_services, $price_per_night);
+                $result->bind_result($froom_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
 
                 if ($result->fetch()) {
-                    $output = ["roomNumber" => $froom_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night];
+                    $output = [
+                        "roomNumber" => $froom_number, 
+                        "roomType" => $room_type, 
+                        "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
+                        "image_url" => $image_url ? $image_url : ""
+                    ];
 
                     parent::logMessage($this->log_file, "Find Room Accessed");
                 }
@@ -116,7 +123,7 @@
         //     "room_services" => "WiFi, TV",
         //     "price_per_night" => 120.50
         // ];
-        public function updateElement(int $room_number, array $new_data): void {
+        public function updateElement(int $room_number, array $new_data, string $update_image=null): void {
             try {
                 $count = count(array_keys($new_data));
                 $arrKeys = array_keys($new_data);
@@ -128,10 +135,7 @@
                 for($i=0; $i < $count-1; $i++) {
                         $key = $arrKeys[$i];
                         $types .= gettype($new_data[$key])[0]; 
-                        // if ($key == "room_service" || $key == "room_type") {
-                        //     array_push($values, "$new_data[$key]");
-                        //     continue;
-                        // }
+                        
                         array_push($values, $new_data[$key]);
                         $query .= "$key = ?, ";
                 }
@@ -152,15 +156,56 @@
 
 
                 if ($action->affected_rows > 0) {
-                    http_response_code(200);
+                    $action->close();
                     parent::logMessage($this->log_file, "Update Room $room_number Successfull");
-                } else {
-                    throw new Exception("Update Failed. Wrong room or no new changes", 400);
+                } elseif($action->affected_rows < 0){
+                    $action->close();
+                    throw new Exception("Update room $room_number: Nothing changed", 204);
                 }
 
+                if ($update_image) {
+                    $this->updateRoomImage($room_number, $update_image);
+                }
+                http_response_code(200);
             } catch (Exception $error) {
                 parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
                 http_response_code(500);
+            }
+        }
+
+        private function updateRoomImage(int $room_number, string $new_image_url) {
+            $room_id = null;
+            // get room id first
+            $query = "SELECT id FROM $this->room_table WHERE room_number = ?";
+            $action = $this->connection->prepare($query);
+            $action->bind_param("i", $room_number);
+
+            if ($action->execute()) {
+                $action->bind_result($id);
+                if ($action->fetch()) $room_id = $id;
+                $action->close();
+            } else {
+                $action->close();
+                throw new Exception("Failed to update room image", 500);
+            }
+
+            // update image_url associated with the room id
+
+            $updateQuery = "UPDATE $this->image_table SET image_url = ? WHERE room_id = ?";
+            $updateAction = $this->connection->prepare($updateQuery);
+            $updateAction->bind_param("si", $new_image_url, $room_id);
+
+            $updateAction->execute();
+
+            if ($updateAction->affected_rows > 0) {
+                $updateAction->close();
+                parent::logMessage($this->log_file, "Updated Room $room_number image ");
+            } elseif($action->affected_rows < 0) {
+                $updateAction->close();
+                throw new Exception("Update room $room_number image : Nothing changed", 204);
+            } else {
+                $updateAction->close();
+                throw new Exception("Update room $room_number image : Failed", 500);
             }
         }
 

@@ -1,25 +1,32 @@
-<?php 
+<?php
+// Always make sure to use only require_once instead of require
+require_once("./Database/Migrations/Migrations.php");
+new Migrations();
+$uri = $_SERVER['REQUEST_URI'];
+print_r($uri);
+// print_r($_SERVER);
 
-// echo "Testing server";
-// echo "</br>";
-
-// echo "Php working from docker"
-
-// require("./Database/RoomClass.php");
-
-// $db = new Room();
-// echo "<br/>";
-// print_r($db->getAll());
-// $db->createElement(112, 'single', 1, 'WiFi, TV', 7500.90);
-// print_r($db->findElement(103));
-// $db->deleteElement(105);
-// $db->updateElement(102, [
-//         // "room_number" => 103,
-//         // "room_type" => "double",
-//         "is_available" => 0,
-//         // "room_service" => "WiFi, TV, Air, Bar",
-//         "price_per_night" => 120.55
-//     ]);
-// $db->close();
+switch ($uri) {
+    case '/login':
+        echo ' Not implemented yet';
+        break;
+    
+    case '/customer':
+        echo ' Not implemented yet';
+        break;
+    case '/rooms':
+        echo ' Not implemented yet';
+        break;
+    case '/booking':
+        echo ' Not implemented yet';
+        break;
+    case '/staff':
+        echo ' Not implemented yet';
+        break;
+    default:
+        http_response_code(404);
+        echo json_encode(['error' => 'Route not found']);
+        break;
+}
 
 ?>
