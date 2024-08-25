@@ -1,7 +1,7 @@
 <?php
     require_once("./Database/DatabaseClass.php");
     require_once("./Database/Interfaces/IDB_Methods.php");
-    require_once('./Database/Migrations/RoomsMigrations.php');
+    
     class Room extends Database implements IDB_Room_Methods {
         private string $room_table;
         private string $image_table;
@@ -9,8 +9,6 @@
 
         public function __construct()
         {
-            // create initial tables and data
-            new RoomsMigrations();
             // initialize parent
             parent::__construct();
             // table name for the database

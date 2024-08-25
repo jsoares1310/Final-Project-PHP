@@ -1,15 +1,14 @@
 <?php
     require_once("./Database/DatabaseClass.php");
     require_once("./Database/Interfaces/IDB_Methods.php");
-    require_once('./Database/Migrations/BookingMigration.php');
+    
     class Booking extends Database implements IDB_Booking_Methods {
         private string $booking_table;
         private string $log_file;
 
         public function __construct()
         {
-            // create initial tables and data
-            new BookingMigration();
+            
             // initialize parent
             parent::__construct();
             // table name for the database

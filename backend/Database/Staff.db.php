@@ -1,14 +1,13 @@
 <?php 
 require_once("./Database/DatabaseClass.php");
 require_once("./Database/Interfaces/IDB_Methods.php");
-require_once("./Database/Migrations/StaffMigration.php");
+
 class Staff extends Database implements IDB_Staff_Methods {
     private string $log_file;
     private string $staff_table;
 
     public function __construct()
     {
-        new StaffMigration();
 
         parent::__construct();
 
