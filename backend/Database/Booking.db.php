@@ -124,17 +124,17 @@
             }
         }
 
-        // update Room accordingly to new_data array
+        // update Booking accordingly to new_data array
         // new_data array should be an associate array
         // with key names being the name of the columns
-        // e.g [
-        //     "room_number" => 101,
-        //     "room_type" => "double",
-        //     "is_available" => true,
-        //     "room_services" => "WiFi, TV",
-        //     "price_per_night" => 120.50
+        // this update only accepts the values below
+        // e.g [ 
+        //      "check_in" => string but type Date,
+        //      "check_out" => string but type Date,
+        //      "status" => 'pending', 'approved', 'cancelled' |-> only those values are accepted
+        //      "total_price" => 225.75
         // ];
-        public function updateElement(int $booking_id, array $new_data, string $update_image=null): void {
+        public function updateElement(int $booking_id, array $new_data): void {
             try {
                 $count = count(array_keys($new_data));
                 $arrKeys = array_keys($new_data);
@@ -151,12 +151,13 @@
                         $query .= "$key = ?, ";
                 }
 
+                // can get an error if the new_data is empty
                 $key = $arrKeys[$count-1];
                 $types .= gettype($new_data[$key])[0];
                 array_push($values, $new_data[$key]);
                 $query .= "$key = ? ";
-                $query .= "WHERE room_number = ?";
-                array_push($values, $room_number);
+                $query .= "WHERE id = ?";
+                array_push($values, $booking_id);
                 $types .= "i";
 
                 $action = $this->connection->prepare($query);
@@ -165,19 +166,19 @@
 
                 $action->execute();
 
-
                 if ($action->affected_rows > 0) {
                     $action->close();
-                    parent::logMessage($this->log_file, "Update Room $room_number Successfull");
-                } elseif($action->affected_rows < 0){
+                    parent::logMessage($this->log_file, "Updated booking of id: $booking_id Successfully");
+                    http_response_code(200);
+                } else {
                     $action->close();
-                    throw new Exception("Update room $room_number: Nothing changed", 204);
+                    http_response_code(400);
+                    throw new Exception("Update booking of id: $booking_id - Nothing changed", 204);
                 }
 
-                http_response_code(200);
             } catch (Exception $error) {
                 parent::logMessage($this->log_file, $error->getMessage() . ", Code: " . $error->getCode());
-                http_response_code(500);
+                
             }
         }
 
