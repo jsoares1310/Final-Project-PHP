@@ -1,7 +1,7 @@
 <?php
-    require("./Database/DatabaseClass.php");
-    require("./Database/Interfaces/IDB_Methods.php");
-    require('./Database/Migrations/RoomsMigrations.php');
+    require_once("./Database/DatabaseClass.php");
+    require_once("./Database/Interfaces/IDB_Methods.php");
+    require_once('./Database/Migrations/RoomsMigrations.php');
     class Room extends Database implements IDB_Room_Methods {
         private string $room_table;
         private string $image_table;

@@ -1,6 +1,6 @@
 <?php 
-require('./Classes/LogClass.php');
-require('./Database/Config.php');
+require_once('./Classes/LogClass.php');
+require_once('./Database/Config.php');
 
 class Database {
     // server name ex: localhost

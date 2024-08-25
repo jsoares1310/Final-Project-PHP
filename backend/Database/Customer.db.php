@@ -1,7 +1,7 @@
 <?php 
-require("./Database/DatabaseClass.php");
-require("./Database/Interfaces/IDB_Methods.php");
-require("./Database/Migrations/CustomerMigration.php");
+require_once("./Database/DatabaseClass.php");
+require_once("./Database/Interfaces/IDB_Methods.php");
+require_once("./Database/Migrations/CustomerMigration.php");
 class Customer extends Database implements IDB_Customer_Methods {
     private string $log_file;
     private string $customer_table;
