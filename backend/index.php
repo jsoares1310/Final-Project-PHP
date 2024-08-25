@@ -1,4 +1,5 @@
 <?php
+// Always make sure to use only require_once instead of require
 require_once("./Database/Migrations/Migrations.php");
 new Migrations();
 $uri = $_SERVER['REQUEST_URI'];
