@@ -2,8 +2,9 @@
 require_once("./Classes/Customer.db.php");
 require_once("./Classes/AbstractClasses/UserClass.php");
 
-class Customer extends User implements IDB_Customer_Methods{
+class Customer extends User {
     private float $wallet_balance;
+    private Customer $customer;
     private string $log_file;
     
     public function __construct(int $uid, string $fname, string $lname, string $email, string $phone, float $wallet_balance) {    
@@ -52,8 +53,7 @@ class Customer extends User implements IDB_Customer_Methods{
         }
     
 
-    
-
+}
 
 
 ?>
