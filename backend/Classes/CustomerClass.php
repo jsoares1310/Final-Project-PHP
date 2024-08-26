@@ -24,14 +24,16 @@ class Customer extends User implements IDB_Customer_Methods{
         //     "is_blocked" => 0 or 1,
         // ];
     public function add_funds(float $wallet_balance){
-        
-        $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance]);
-        if (http_response_code() == 201) {
-        echo "Balance updated!";
+        try {
+            $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance]);
+            if (http_response_code() == 201) {
+                echo "Balance updated!";
+            }
+            return;
+        } catch(Exception $error) {
+            $this->staff->logMessage($this->log_file, $error->getMessage());
         }
-        return;
     }
-   
 
     }
     public function book_room(User $user, Room $room, string $roomnumber){
