@@ -12,7 +12,18 @@ class Customer extends User implements IDB_Customer_Methods{
         $this->customer = new Customer();
     }
 
-    
+    public function add_funds(float $wallet_balance){
+        try {
+            $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance]);
+            if (http_response_code() == 201) {
+                echo "Balance updated!";
+            }
+            return;
+        } catch(Exception $error) {
+            $this->customer->logMessage($this->log_file, $error->getMessage());
+        }
+    }
+
     public function book_room(Room $room_number, Room $is_available, Room $price_per_night, $wallet_balance){
     // Fetch available rooms from database, then show available ones. Then update the database to 
      
