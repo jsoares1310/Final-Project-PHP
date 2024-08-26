@@ -26,8 +26,15 @@ class Customer extends User implements IDB_Customer_Methods{
 
     public function book_room(Room $room_number, Room $is_available, Room $price_per_night, $wallet_balance){
     // Fetch available rooms from database, then show available ones. Then update the database to 
-     
+    try {
+        if($is_available && $price_per_night < $wallet_balance){
 
+    }
+}
+    catch(Exception $error){
+
+    }
+}
     public function cancel_room(User $user, Room $room, string $roomnumber){
     // Book the Room
         
