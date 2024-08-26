@@ -11,18 +11,7 @@ class Customer extends User implements IDB_Customer_Methods{
         parent::__construct($uid, $fname, $lname, $email, $phone);
         $this->customer = new Customer();
     }
-     // update Customer accordingly to new_data array
-        // new_data array should be an associate array
-        // with key names being the name of the columns
-        // password can be updated here.
-        // e.g [
-        //     "first_name" => '',
-        //     "last_name" => '',
-        //     "phone" => '', max 15 char
-        //     "email" => '',
-        //     "wallet_balance" => 100.90,
-        //     "is_blocked" => 0 or 1,
-        // ];
+
     public function add_funds(float $wallet_balance){
         try {
             $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance]);
@@ -31,17 +20,22 @@ class Customer extends User implements IDB_Customer_Methods{
             }
             return;
         } catch(Exception $error) {
-            $this->staff->logMessage($this->log_file, $error->getMessage());
+            $this->customer->logMessage($this->log_file, $error->getMessage());
         }
     }
 
-    }
-    public function book_room(User $user, Room $room, string $roomnumber){
+    public function book_room(Room $room_number, Room $is_available, Room $price_per_night, $wallet_balance){
     // Fetch available rooms from database, then show available ones. Then update the database to 
-        
-   
-
+        try {
+            if($is_available && $price_per_night < $wallet_balance){
+    
+        }
     }
+        catch(Exception $error){
+
+        }
+    }
+
     public function cancel_room(User $user, Room $room, string $roomnumber){
     // Book the Room
         
