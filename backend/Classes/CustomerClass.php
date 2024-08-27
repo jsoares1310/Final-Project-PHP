@@ -1,6 +1,9 @@
 <?php
 require_once("./Classes/Customer.db.php");
 require_once("./Classes/AbstractClasses/UserClass.php");
+require_once("./Classes/Booking.db.php");
+require_once("./Classes/RoomClass.php");
+require_once("./Classes/Room.db.php");
 
 class CustomerController extends User {
     private float $wallet_balance;
@@ -25,6 +28,7 @@ class CustomerController extends User {
     }
 
     // Fetch available rooms from database, then show available ones. Then update the database to 
+    // *****Logic still needs to be updated including Booking Class*****
     public function book_room(string $email,int $room_number, bool $is_available, float $price_per_night, float $wallet_balance){
         try {
             $room = new Room();
