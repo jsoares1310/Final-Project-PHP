@@ -2,7 +2,7 @@
 require_once("./Classes/Customer.db.php");
 require_once("./Classes/AbstractClasses/UserClass.php");
 
-class Customer extends User {
+class CustomerController extends User {
     private float $wallet_balance;
     private Customer $customer;
     private string $log_file;

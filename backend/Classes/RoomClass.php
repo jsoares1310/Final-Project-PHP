@@ -1,6 +1,6 @@
 <?php
     require ("../Database/RoomClass.php");
-    class Room {
+    class RoomController {
         // An integer or string representing the room's unique number or identifier.
         private $room_number;
         // A string indicating the type of room, such as "Single", "Double", "Suite", etc.

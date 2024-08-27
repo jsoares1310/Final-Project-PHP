@@ -1,7 +1,7 @@
 <?php 
 require_once("./Database/Staff.db.php");
 require_once("./Classes/AbstractClasses/UserClass.php");
-class Admin extends User {
+class AdminController extends User {
     private Staff $staff;
     private string $log_file;
 
