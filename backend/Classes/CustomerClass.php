@@ -12,7 +12,6 @@ class CustomerController extends User {
         parent::__construct($uid, $fname, $lname, $email, $phone);
         $this->customer = new Customer();
     }
-
     public function add_funds(float $wallet_balance){
         try {
             $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance]);
@@ -25,22 +24,32 @@ class CustomerController extends User {
         }
     }
 
-    public function book_room(Room $room_number, Room $is_available, Room $price_per_night, $wallet_balance){
     // Fetch available rooms from database, then show available ones. Then update the database to 
+    public function book_room(string $email,int $room_number, bool $is_available, float $price_per_night, float $wallet_balance){
         try {
+            $room = new Room();
+            
             if($is_available && $price_per_night < $wallet_balance){
-    
+               $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance - $price_per_night]);
+               $room->updateElement($room_number,['is_available' => false]);
+               $room->close();
+            }else{
+            print_r('Insufficient funds');
+        }}
+        catch(Exception $error){
+            $this->customer->logMessage($this->log_file, $error->getMessage());
         }
     }
+
+    public function cancel_room(int $room_number, bool $is_available){
+    // Cancel the Room
+        try{
+            $room_number->updateElement($room_number,['is_available' => true]);
+            print_r('Sorry. No refunds allowed :(')
+        }   
         catch(Exception $error){
 
         }
-    }
-
-    public function cancel_room(User $user, Room $room, string $roomnumber){
-    // Book the Room
-        
-   
 
     }
 
@@ -54,6 +63,5 @@ class CustomerController extends User {
     
 
 }
-
 
 ?>
