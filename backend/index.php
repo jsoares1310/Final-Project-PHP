@@ -41,10 +41,14 @@ switch ($uri) {
         try {
             if (isset($_POST['room_number'])) {
                 $staff = new StaffController(1, 'test', 'test', 'test@test.com', '12345678909');
-                //update_room(int $room_number, array $new_data)
-                $staff->update_room((int)$_POST['room_number'], $_POST['room_type'], $_POST['is_available'], $_POST['room_services'], $_POST['price_per_night']);
+                $makeArray = [];
+                foreach(['room_number', 'room_type', 'is_available', 'room_service', 'price_per_night'] as $key){
+                    $makeArray[$key] = $_POST[$key];    
+                }
+                //print_r($makeArray);
 
-                echo $_POST['room_number'] . " is added";
+                $staff->update_room((int)$_POST['room_number'], $makeArray);
+                
             } else {
                 throw new Exception("key doesn't exist");
             }
@@ -57,7 +61,7 @@ switch ($uri) {
         try {
             if (isset($_POST['room_number'])) {
                 $staff = new StaffController(1, 'test', 'test', 'test@test.com', '12345678909');
-                $staff->add_room((int)$_POST['room_number'], $_POST['room_type'], $_POST['is_available'], $_POST['room_services'], $_POST['price_per_night']);
+                $staff->add_room((int)$_POST['room_number'], $_POST['room_type'], $_POST['is_available'], $_POST['room_service'], $_POST['price_per_night']);
             } else {
                 throw new Exception("key doesn't exist");
             }

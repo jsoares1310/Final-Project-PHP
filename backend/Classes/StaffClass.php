@@ -14,19 +14,29 @@ class StaffController extends User {
 
         // Method to manage bookings (approve)
         public function approve_booking(int $booking_id) {
+            try {            
+                $roomDb = new Room();
+                $result = $roomDb->findElement($room_number);
 
+                $decodedResult = json_decode($result, true);
+                if (!empty($decodedResult)) {
+                    echo "This Room Number Already Exists";
+                    return;
+                }
+
+            } catch (Exception $error) {
+                $this->staff->LogMessage($this->log_file, $error->getMessage());
+            }
         }
 
         // Method to manage rooms (add/remove/update)
         public function add_room($room_number, $room_type, $is_available, $room_services, $price_per_night) {
-            try {
-                //$result = $dbClass->Select("user_tb",["cols"=>['email','role'],"vals"=>[$this->email,$this->role],"operator"=>["=","="],"operand"=>"AND"]);
-                //if($result->num_rows > 0){
-             
+            try {            
                 $roomDb = new Room();
                 $result = $roomDb->findElement($room_number);
 
-                if (!empty($result)) {
+                $decodedResult = json_decode($result, true);
+                if (!empty($decodedResult)) {
                     echo "This Room Number Already Exists";
                     return;
                 }
@@ -46,6 +56,15 @@ class StaffController extends User {
         public function del_room(int $room_number) {
             try {
                 $roomDb = new Room();
+                $result = $roomDb->findElement($room_number);
+
+                $decodedResult = json_decode($result, true);
+
+                if (empty($decodedResult)) {
+                    echo "This Room Number does not exist";
+                    return;
+                }
+
                 $roomDb->deleteElement($room_number);
                 if (http_response_code() == 200) {
                     echo "Room Deleted";
@@ -63,8 +82,10 @@ class StaffController extends User {
                 $roomDb = new Room();
                 $result = $roomDb->findElement($room_number);
 
-                if (empty($result)) {
-                    echo "This Room Number not Exists";
+                $decodedResult = json_decode($result, true);
+
+                if (empty($decodedResult)) {
+                    echo "This Room Number does not exist";
                     return;
                 }
 
