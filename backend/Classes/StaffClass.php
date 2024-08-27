@@ -18,8 +18,19 @@ class StaffController extends User {
         }
 
         // Method to manage rooms (add/remove/update)
-        public function add_room(int $roomId, array $roomDetails = []) {
-            
+        public function add_room($room_number, $room_type, $is_available, $room_services, $price_per_night) {
+            try {
+                $roomDb = new Room();
+                //int $room_number, string $room_type, int $is_available, string $room_services, float $price_per_night
+                $roomDb->createElement($room_number, $room_type, $is_available, $room_services, $price_per_night);
+                if (http_response_code() == 200) {
+                    echo "New Room Added";
+                } else {
+                    throw new Exception("Room Addition failed", http_response_code());
+                }
+            } catch (Exception $error) {
+                $this->staff->LogMessage($this->log_file, $error->getMessage());
+            }
         }
 
         public function del_room(int $room_number) {
