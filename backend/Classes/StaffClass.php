@@ -1,6 +1,7 @@
 <?php 
 require_once("./Database/Staff.db.php");
 require_once("./Database/Room.db.php");
+require_once("./Database/Booking.db.php");
 require_once("./Classes/AbstractClasses/UserClass.php");
 class StaffController extends User {
         private Staff $staff;
@@ -13,17 +14,18 @@ class StaffController extends User {
         }
 
         // Method to manage bookings (approve)
-        public function approve_booking(int $booking_id) {
+        public function approve_booking(int $booking_id, array $new_data) {
             try {            
-                $roomDb = new Room();
-                $result = $roomDb->findElement($room_number);
+                $bookingDb = new Booking();
+                $result = $bookingDb->findElement($booking_id);
 
                 $decodedResult = json_decode($result, true);
-                if (!empty($decodedResult)) {
-                    echo "This Room Number Already Exists";
+                if (empty($decodedResult)) {
+                    echo "Booking ID Not Exists";
                     return;
                 }
 
+                $bookingDb->updateElement($booking_id, $new_data);
             } catch (Exception $error) {
                 $this->staff->LogMessage($this->log_file, $error->getMessage());
             }

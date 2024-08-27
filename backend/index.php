@@ -36,7 +36,25 @@ switch ($uri) {
     case '/staff':
         echo ' Not implemented yet';
         break;
-    
+    case '/staff/approve/room':
+        try {
+            if (isset($_POST['id'])) {
+                $staff = new StaffController(1, 'test', 'test', 'test@test.com', '12345678909');
+                $makeArray = [];
+                foreach(['status'] as $key){
+                    $makeArray[$key] = $_POST[$key];    
+                }
+                //print_r($makeArray);
+
+                $staff->approve_booking($_POST['id'], $makeArray);
+                
+            } else {
+                throw new Exception("key doesn't exist");
+            }
+        } catch (Exception $error) {
+            echo $error->getMessage();
+        }
+        break;
     case '/staff/update/room': 
         try {
             if (isset($_POST['room_number'])) {
