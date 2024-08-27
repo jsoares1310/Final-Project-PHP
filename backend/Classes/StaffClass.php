@@ -19,7 +19,7 @@ class StaffController extends User {
 
         // Method to manage rooms (add/remove/update)
         public function add_room(int $roomId, array $roomDetails = []) {
-
+            
         }
 
         public function del_room(int $room_number) {
