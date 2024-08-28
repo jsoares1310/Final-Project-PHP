@@ -36,10 +36,11 @@ class CustomerController extends User {
             if($is_available && $price_per_night < $wallet_balance){
                $this->customer->updateElement($this->email,['wallet_balance' => $wallet_balance - $price_per_night]);
                $room->updateElement($room_number,['is_available' => false]);
-               $room->close();
             }else{
             print_r('Insufficient funds');
-        }}
+            $room->close();
+        }
+    }
         catch(Exception $error){
             $this->customer->logMessage($this->log_file, $error->getMessage());
         }
@@ -48,8 +49,10 @@ class CustomerController extends User {
     public function cancel_room(int $room_number, bool $is_available){
     // Cancel the Room
         try{
-            $room_number->updateElement($room_number,['is_available' => true]);
-            print_r('Sorry. No refunds allowed :(')
+            $room = new Room();
+            $room->updateElement($room_number,['is_available' => true]);
+            print_r('Sorry. No refunds allowed :(');
+            $room->close();
         }   
         catch(Exception $error){
 
