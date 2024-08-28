@@ -79,8 +79,11 @@ switch ($uri) {
         try {
             if (isset($_POST['room_number'])) {
                 $staff = new StaffController(1, 'test', 'test', 'test@test.com', '12345678909');
-                $staff->add_room((int)$_POST['room_number'], $_POST['room_type'], $_POST['is_available'], $_POST['room_service'], $_POST['price_per_night']);
+                $staff->add_room((int)$_POST['room_number'], $_POST['room_type'], (bool)$_POST['is_available'], $_POST['room_service'], (float)$_POST['price_per_night']);
+                $staff->LogMessage($_SERVER['REMOTE_ADDR'] . ": Staff member added new room");
+                $staff->closeConnection();
             } else {
+                http_response_code(400);
                 throw new Exception("key doesn't exist");
             }
         } catch (Exception $error) {
