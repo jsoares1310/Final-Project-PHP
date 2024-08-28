@@ -8,17 +8,17 @@
         // A boolean indicating whether the room is currently available for booking.
         private $is_available;
         // A string indicating which room services are available for this room.
-        private $room_services;
+        private $room_service;
         // A float or integer representing the cost per night for the room.
         private $price_per_night;
         // A room Object
         private Room $room;
-        function __construct(int $room_number, string $room_type, bool $is_available, string $room_services, float $price_per_night) 
+        function __construct(int $room_number, string $room_type, bool $is_available, string $room_service, float $price_per_night) 
         {
             $this->room_number = $room_number;
             $this->room_type = $room_type;
             $this->is_available = $is_available;
-            $this->room_services = $room_services;
+            $this->room_service = $room_service;
             $this->price_per_night = $price_per_night;
             $this->room = new Room();
         }

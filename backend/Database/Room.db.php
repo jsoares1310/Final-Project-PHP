@@ -20,7 +20,7 @@
         // create new room
         // the parameter isAvailable is typed as int but the values
         // that it accepts is only 0 or 1
-        public function createElement(int $room_number, string $room_type, int $is_available, string $room_services, float $price_per_night): void
+        public function createElement(int $room_number, string $room_type, int $is_available, string $room_service, float $price_per_night): void
         {
            try {
             $verify = $this->connection->prepare("SELECT room_number FROM $this->room_table WHERE room_number=?");
@@ -39,7 +39,7 @@
 
             $action = $this->connection->prepare("INSERT INTO $this->room_table (room_number, room_type, is_available, room_service, price_per_night) VALUES (?,?,?,?,?)");
 
-            $action->bind_param("isisd", $room_number, $room_type, $is_available, $room_services, $price_per_night);
+            $action->bind_param("isisd", $room_number, $room_type, $is_available, $room_service, $price_per_night);
 
             $action->execute();
 
@@ -62,9 +62,9 @@
                 $result = $this->connection->prepare("SELECT room_number, room_type, is_available, room_service, price_per_night, image_url FROM $this->room_table LEFT JOIN room_image ON $this->image_table.room_id = $this->room_table.id");
 
                 if ($result->execute()) {
-                    $result->bind_result($room_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
+                    $result->bind_result($room_number, $room_type, $is_available, $room_service, $price_per_night, $image_url);
                     while($result->fetch()) {
-                        array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
+                        array_push($output, [ "roomNumber" => $room_number, "roomType" => $room_type, "isAvailable" => $is_available, "roomServices" => $room_service, "pricePerNight" => $price_per_night,
                         "image_url" => $image_url ? $image_url : ''
                      ]);
                     }
@@ -92,13 +92,13 @@
 
                 $result->execute();
 
-                $result->bind_result($froom_number, $room_type, $is_available, $room_services, $price_per_night, $image_url);
+                $result->bind_result($froom_number, $room_type, $is_available, $room_service, $price_per_night, $image_url);
 
                 if ($result->fetch()) {
                     $output = [
                         "roomNumber" => $froom_number, 
                         "roomType" => $room_type, 
-                        "isAvailable" => $is_available, "roomServices" => $room_services, "pricePerNight" => $price_per_night,
+                        "isAvailable" => $is_available, "roomServices" => $room_service, "pricePerNight" => $price_per_night,
                         "image_url" => $image_url ? $image_url : ""
                     ];
 
@@ -120,7 +120,7 @@
         //     "room_number" => 101,
         //     "room_type" => "double",
         //     "is_available" => true,
-        //     "room_services" => "WiFi, TV",
+        //     "room_service" => "WiFi, TV",
         //     "price_per_night" => 120.50
         // ];
         public function updateElement(int $room_number, array $new_data, string $update_image=null): void {
@@ -131,15 +131,14 @@
                 $values = [];
 
                 $query = "UPDATE $this->room_table SET ";
-
-                for($i=0; $i < $count-1; $i++) {
-                        $key = $arrKeys[$i];
-                        $types .= gettype($new_data[$key])[0]; 
-                        
-                        array_push($values, $new_data[$key]);
-                        $query .= "$key = ?, ";
+                for($i=1; $i < $count-1; $i++) {   //room_number shouldn't be changed
+                    $key = $arrKeys[$i];
+                    $types .= gettype($new_data[$key])[0]; 
+                    
+                    array_push($values, $new_data[$key]);
+                    $query .= "$key = ?, ";
                 }
-
+                
                 $key = $arrKeys[$count-1];
                 $types .= gettype($new_data[$key])[0];
                 array_push($values, $new_data[$key]);
@@ -147,18 +146,24 @@
                 $query .= "WHERE room_number = ?";
                 array_push($values, $room_number);
                 $types .= "i";
+                try {
+                    $action = $this->connection->prepare($query);
+                } catch(Exception $error) {
+                    print_r($error->getMessage());
+                }
 
-                $action = $this->connection->prepare($query);
+                if (!$action) {
+                    echo "fail";
+                    throw new Exception("Prepare failed: " . $this->connection->error);
+                }
 
                 $action->bind_param($types, ...$values);
-
                 $action->execute();
-
 
                 if ($action->affected_rows > 0) {
                     $action->close();
-                    parent::logMessage($this->log_file, "Update Room $room_number Successfull");
-                } elseif($action->affected_rows < 0){
+                    parent::logMessage($this->log_file, "Update Room $room_number Successful");
+                } elseif($action->affected_rows == 0){
                     $action->close();
                     throw new Exception("Update room $room_number: Nothing changed", 204);
                 }
