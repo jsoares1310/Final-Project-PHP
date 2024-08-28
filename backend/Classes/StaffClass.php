@@ -115,8 +115,8 @@ class StaffController extends User {
             $this->staff->close();
         }
 
-        public function LogMessage(string $fileName, string $message) {
-            $this->staff->LogMessage($fileName, $message);
+        public function LogMessage(string $message) {
+            $this->staff->LogMessage($this->log_file, $message);
         }
     }
 
