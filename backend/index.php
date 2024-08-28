@@ -56,14 +56,25 @@ switch ($uri) {
     case '/admin/block/user':
         try {
             if (isset($_POST['email'])) {
-                $admin = new AdminController(1, 'test', 'test', 'test@test.com', '12345678909');
-                $makeArray = [];
-                foreach(['is_blocked'] as $key){
-                    $makeArray[$key] = $_POST[$key];    
-                }
-                //print_r($makeArray);
-                //echo $_POST['email'];
+                $admin = new AdminController(1, 'test', 'test', 'test@test.com', '12345678909');              
+                $makeArray['is_blocked'] = 1;    
+
                 $admin->block_user($_POST['email'], $makeArray);
+                
+            } else {
+                throw new Exception("key doesn't exist");
+            }
+        } catch (Exception $error) {
+            echo $error->getMessage();
+        }
+        break;
+    case '/admin/unblock/user':
+        try {
+            if (isset($_POST['email'])) {
+                $admin = new AdminController(1, 'test', 'test', 'test@test.com', '12345678909');              
+                $makeArray['is_blocked'] = 0;    
+
+                $admin->unblock_user($_POST['email'], $makeArray);
                 
             } else {
                 throw new Exception("key doesn't exist");

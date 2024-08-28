@@ -74,8 +74,27 @@ class AdminController extends User {
         }
     }
 
-    public function unblock_user(string $email) {
+    public function unblock_user(string $email, array $new_data) {
+        try {
+            $customerDb = new Customer();
+            $result = $customerDb->findElement($email);
 
+            $decodedResult = json_decode($result, true);
+
+            if (empty($decodedResult)) {
+                echo "This Email Not Exists";
+                return;
+            }
+
+            $customerDb->updateElement($email, $new_data);
+            if (http_response_code() == 200) {
+                echo "This Customer Unblocked";
+            } else {
+                throw new Exception("Failed To Unblock", http_response_code());
+            }
+        } catch (Exception $error) {
+            $this->staff->logMessage($this->log_file, $error->getMessage());
+        }
     }
 
     
