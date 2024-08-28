@@ -5,7 +5,7 @@ require_once("./Classes/StaffClass.php");
 require_once("./Classes/AdminClass.php");
 new Migrations();
 $uri = $_SERVER['REQUEST_URI'];
-print_r($uri);
+print_r($uri . "\n");
 // print_r($_SERVER);
 
 switch ($uri) {
@@ -44,6 +44,26 @@ switch ($uri) {
                 print_r($makeArray);
                 //echo $_POST['email'];
                 $admin->edit_user($_POST['email'], $makeArray);
+                
+            } else {
+                throw new Exception("key doesn't exist");
+            }
+        } catch (Exception $error) {
+            echo $error->getMessage();
+        }
+        break;
+
+    case '/admin/block/user':
+        try {
+            if (isset($_POST['email'])) {
+                $admin = new AdminController(1, 'test', 'test', 'test@test.com', '12345678909');
+                $makeArray = [];
+                foreach(['is_blocked'] as $key){
+                    $makeArray[$key] = $_POST[$key];    
+                }
+                //print_r($makeArray);
+                //echo $_POST['email'];
+                $admin->block_user($_POST['email'], $makeArray);
                 
             } else {
                 throw new Exception("key doesn't exist");

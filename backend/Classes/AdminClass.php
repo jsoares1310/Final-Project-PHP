@@ -1,5 +1,6 @@
 <?php 
 require_once("./Database/Staff.db.php");
+require_once("./Database/Customer.db.php");
 require_once("./Classes/AbstractClasses/UserClass.php");
 class AdminController extends User {
     private Staff $staff;
@@ -50,15 +51,30 @@ class AdminController extends User {
         }
     }
 
-    public function del_user(int $uid) {
+    public function block_user(string $email, array $new_data) {
+        try {
+            $customerDb = new Customer();
+            $result = $customerDb->findElement($email);
 
+            $decodedResult = json_decode($result, true);
+
+            if (empty($decodedResult)) {
+                echo "This Email Not Exists";
+                return;
+            }
+
+            $customerDb->updateElement($email, $new_data);
+            if (http_response_code() == 200) {
+                echo "This Customer blocked";
+            } else {
+                throw new Exception("Failed To Block", http_response_code());
+            }
+        } catch (Exception $error) {
+            $this->staff->logMessage($this->log_file, $error->getMessage());
+        }
     }
 
-    public function lock_user(int $uid) {
-    
-    }
-
-    public function unlock_user(int $uid) {
+    public function unblock_user(string $email) {
 
     }
 
