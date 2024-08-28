@@ -27,8 +27,27 @@ class AdminController extends User {
         }
     }
 
-    public function edit_user(int $uid) {
+    public function edit_user(string $email, array $new_data) {
+        try {
+            $staffDb = new Staff();
+            $result = $staffDb->findElement($email);
 
+            $decodedResult = json_decode($result, true);
+
+            if (empty($decodedResult)) {
+                echo "This Email Not Exists";
+                return;
+            }
+
+            $staffDb->updateElement($email, $new_data);
+            if (http_response_code() == 200) {
+                echo "User Info Updated";
+            } else {
+                throw new Exception("User Edit failed", http_response_code());
+            }
+        } catch (Exception $error) {
+            $this->staff->logMessage($this->log_file, $error->getMessage());
+        }
     }
 
     public function del_user(int $uid) {
