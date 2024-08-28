@@ -26,6 +26,7 @@ class StaffController extends User {
                 }
 
                 $bookingDb->updateElement($booking_id, $new_data);
+                $bookingDb->close();
             } catch (Exception $error) {
                 $this->staff->LogMessage($this->log_file, $error->getMessage());
             }
@@ -39,6 +40,7 @@ class StaffController extends User {
 
                 $decodedResult = json_decode($result, true);
                 if (!empty($decodedResult)) {
+                    $roomDb->close();
                     echo "This Room Number Already Exists";
                     return;
                 }
@@ -47,9 +49,10 @@ class StaffController extends User {
                 if (http_response_code() == 200) {
                     echo "New Room Added";
                 } else {
+                    $roomDb->close();
                     throw new Exception("Room Addition failed", http_response_code());
                 }
-
+                $roomDb->close();
             } catch (Exception $error) {
                 $this->staff->LogMessage($this->log_file, $error->getMessage());
             }
@@ -63,6 +66,7 @@ class StaffController extends User {
                 $decodedResult = json_decode($result, true);
 
                 if (empty($decodedResult)) {
+                    $roomDb->close();
                     echo "This Room Number does not exist";
                     return;
                 }
@@ -71,8 +75,10 @@ class StaffController extends User {
                 if (http_response_code() == 200) {
                     echo "Room Deleted";
                 } else {
+                    $roomDb->close();
                     throw new Exception("Room deletion failed", http_response_code());
                 }
+                $roomDb->close();
 
             } catch (Exception $error) {
                 $this->staff->LogMessage($this->log_file, $error->getMessage());
@@ -87,6 +93,7 @@ class StaffController extends User {
                 $decodedResult = json_decode($result, true);
 
                 if (empty($decodedResult)) {
+                    $roomDb->close();
                     echo "This Room Number does not exist";
                     return;
                 }
@@ -95,8 +102,10 @@ class StaffController extends User {
                 if (http_response_code() == 200) {
                     echo "Room Info Updated";
                 } else {
+                    $roomDb->close();
                     throw new Exception("Room update failed", http_response_code());
                 }
+                $roomDb->close();
             } catch (Exception $error) {
                 $this->staff->logMessage($this->log_file, $error->getMessage());
             }
