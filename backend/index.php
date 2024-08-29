@@ -22,8 +22,12 @@ switch ($uri) {
         echo ' Not implemented yet';
         break;
     
+        // Finish customer route commands:
     case '/customer':
         echo ' Not implemented yet';
+        $custom = new CustomerController();
+        $custom->book_room();
+
         break;
 
     case '/rooms':
