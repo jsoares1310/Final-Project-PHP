@@ -3,6 +3,7 @@
 require_once("./Database/Migrations/Migrations.php");
 require_once("./Classes/StaffClass.php");
 require_once("./Classes/AdminClass.php");
+require_once("./Classes/CustomerClass.php");
 new Migrations();
 $uri = $_SERVER['REQUEST_URI'];
 //print_r($uri);
@@ -25,8 +26,8 @@ switch ($uri) {
         // Finish customer route commands:
     case '/customer':
         echo ' Not implemented yet';
-        $custom = new CustomerController();
-        $custom->book_room();
+        // $custom = new CustomerController();
+        // $custom->book_room();
 
         break;
 
