@@ -1,0 +1,9 @@
+Room Table Created 2024:08:26 20:11:23
+Room image Table Created 2024:08:26 20:11:23
+Inserted default rooms to the table 2024:08:26 20:11:23
+Staff table created 2024:08:26 20:11:23
+Insert default values to Staff 2024:08:26 20:11:23
+Customer table created 2024:08:26 20:11:23
+Insert default values to Customer 2024:08:26 20:11:23
+Booking table created 2024:08:26 20:11:23
+Insert default values to Booking 2024:08:26 20:11:23

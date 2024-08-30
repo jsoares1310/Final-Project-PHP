@@ -5,6 +5,7 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=final_project
     ports:
       - 3306:3306
     healthcheck:
@@ -19,6 +20,7 @@ services:
     command: >
       bash -c "
       docker-php-ext-install mysqli &&
+      a2enmod rewrite &&
       apache2-foreground
       "
     ports:
